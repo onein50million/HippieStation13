@@ -26,6 +26,9 @@
 
 	var/hat_offset = -3
 
+	var/use_old_animation = FALSE // Used for oldcode's animations
+	var/old_animation_length = 0
+
 /obj/item/weapon/robot_module/New()
 	..()
 	for(var/i in basic_modules)
@@ -178,7 +181,21 @@
 	R.module = RM
 	R.update_module_innate()
 	RM.rebuild_modules()
-	INVOKE_ASYNC(RM, .proc/do_transform_animation)
+
+	if(RM.use_old_animation && RM.old_animation_length)
+		R.icon = 'icons/hippie/mob/robot_transformations.dmi'
+		R.icon_state = RM.cyborg_base_icon
+		world << "[R.icon_state]"
+		R.dir = SOUTH
+		R.notransform = TRUE
+		flick(R.icon_state, R)
+		sleep(RM.old_animation_length+1)
+		R.notransform = FALSE
+		R.icon = 'icons/mob/robots.dmi'
+	else
+		world << "2"
+		INVOKE_ASYNC(RM, .proc/do_transform_animation)
+
 	qdel(src)
 	return RM
 
@@ -246,6 +263,8 @@
 	feedback_key = "cyborg_medical"
 	can_be_pushed = FALSE
 	hat_offset = 3
+	use_old_animation = TRUE
+	old_animation_length = 35
 
 /obj/item/weapon/robot_module/engineering
 	name = "Engineering"
@@ -262,6 +281,8 @@
 	feedback_key = "cyborg_engineering"
 	magpulsing = TRUE
 	hat_offset = INFINITY // No hats
+	use_old_animation = TRUE
+	old_animation_length = 45
 
 /obj/item/weapon/robot_module/security
 	name = "Security"
@@ -274,6 +295,8 @@
 	feedback_key = "cyborg_security"
 	can_be_pushed = FALSE
 	hat_offset = 3
+	use_old_animation = TRUE
+	old_animation_length = 28
 
 /obj/item/weapon/robot_module/security/do_transform_animation()
 	..()
@@ -318,6 +341,8 @@
 	moduleselect_icon = "janitor"
 	feedback_key = "cyborg_janitor"
 	hat_offset = -5
+	use_old_animation = TRUE
+	old_animation_length = 22
 
 /obj/item/weapon/reagent_containers/spray/cyborg_drying
 	name = "drying agent spray"
@@ -370,10 +395,16 @@
 	switch(borg_icon)
 		if("Waitress")
 			cyborg_base_icon = "service_f"
+			use_old_animation = TRUE
+			old_animation_length = 45
 		if("Butler")
 			cyborg_base_icon = "service_m"
+			use_old_animation = TRUE
+			old_animation_length = 43
 		if("Bro")
 			cyborg_base_icon = "brobot"
+			use_old_animation = TRUE
+			old_animation_length = 54
 		if("Kent")
 			cyborg_base_icon = "kent"
 			special_light_key = "medical"
@@ -382,6 +413,8 @@
 			cyborg_base_icon = "tophat"
 			special_light_key = null
 			hat_offset = INFINITY //He is already wearing a hat
+			use_old_animation = TRUE
+			old_animation_length = 60
 	return ..()
 
 /obj/item/weapon/robot_module/miner
@@ -395,6 +428,8 @@
 	moduleselect_icon = "miner"
 	feedback_key = "cyborg_miner"
 	hat_offset = 0
+	use_old_animation = TRUE
+	old_animation_length = 30
 
 /obj/item/weapon/robot_module/syndicate
 	name = "Syndicate Assault"
