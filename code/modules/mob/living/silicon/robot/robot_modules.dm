@@ -194,10 +194,7 @@
 		R.dir = SOUTH
 		R.notransform = TRUE
 		flick(R.icon_state, R)
-		//sleep(RM.old_animation_length+1)
 		addtimer(CALLBACK(src, .proc/transform_to_finale, R), RM.old_animation_length + 1)
-		R.notransform = FALSE
-		R.icon = 'icons/mob/robots.dmi'
 	else
 		INVOKE_ASYNC(RM, .proc/do_transform_animation)
 
