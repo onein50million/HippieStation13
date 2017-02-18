@@ -181,6 +181,7 @@
 	R.module = RM
 	R.update_module_innate()
 	RM.rebuild_modules()
+	R.cut_overlays()
 
 	if(RM.use_old_animation && RM.old_animation_length)
 		R.icon = 'icons/hippie/mob/robot_transformations.dmi'
@@ -188,14 +189,21 @@
 		R.dir = SOUTH
 		R.notransform = TRUE
 		flick(R.icon_state, R)
-		sleep(RM.old_animation_length+1)
+		//sleep(RM.old_animation_length+1)
+		addtimer(CALLBACK(src, .proc/transform_to_finale, R), RM.old_animation_length + 1)
 		R.notransform = FALSE
 		R.icon = 'icons/mob/robots.dmi'
 	else
 		INVOKE_ASYNC(RM, .proc/do_transform_animation)
 
+	R.update_icons()
 	qdel(src)
 	return RM
+
+/obj/item/weapon/robot_module/proc/transform_to_finale(mob/living/silicon/robot/R)
+	if(R)
+		R.notransform = FALSE
+		R.icon = 'icons/mob/robots.dmi'
 
 /obj/item/weapon/robot_module/proc/be_transformed_to(obj/item/weapon/robot_module/old_module)
 	for(var/i in old_module.added_modules)
