@@ -41,9 +41,10 @@
 				atmos_machines += A
 				continue
 
-	SSobj.InitializeAtoms(atoms)
+	SSatoms.InitializeAtoms(atoms)
 	SSmachine.setup_template_powernets(cables)
 	SSair.setup_template_machinery(atmos_machines)
+	SSair.end_map_load()
 
 /datum/map_template/proc/load(turf/T, centered = FALSE)
 	if(centered)
@@ -55,8 +56,10 @@
 	if(T.y+height > world.maxy)
 		return
 
+	SSair.begin_map_load()
 	var/list/bounds = maploader.load_map(get_file(), T.x, T.y, T.z, cropMap=TRUE)
 	if(!bounds)
+		SSair.end_map_load()
 		return 0
 
 	//initialize things that are normally initialized after map load
@@ -72,7 +75,7 @@
 		. = file(mappath)
 
 	if(!.)
-		world.log << "The file of [src] appears to be empty/non-existent."
+		log_world("The file of [src] appears to be empty/non-existent.")
 
 /datum/map_template/proc/get_affected_turfs(turf/T, centered = FALSE)
 	var/turf/placement = T
