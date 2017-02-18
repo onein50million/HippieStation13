@@ -185,7 +185,6 @@
 	if(RM.use_old_animation && RM.old_animation_length)
 		R.icon = 'icons/hippie/mob/robot_transformations.dmi'
 		R.icon_state = RM.cyborg_base_icon
-		world << "[R.icon_state]"
 		R.dir = SOUTH
 		R.notransform = TRUE
 		flick(R.icon_state, R)
@@ -193,7 +192,6 @@
 		R.notransform = FALSE
 		R.icon = 'icons/mob/robots.dmi'
 	else
-		world << "2"
 		INVOKE_ASYNC(RM, .proc/do_transform_animation)
 
 	qdel(src)
